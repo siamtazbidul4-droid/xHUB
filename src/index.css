@@ -1,0 +1,133 @@
+@import "tailwindcss";
+@import "video.js/dist/video-js.css";
+
+/* Custom utility styles for video and layout */
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
+
+/* Video.js skin overrides to match Kinetix design language */
+.video-js {
+  font-family: inherit !important;
+}
+
+.video-js .vjs-tech {
+  object-fit: contain;
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Premium Like & Subscribe micro-interactions.
+   All motion is gated behind prefers-reduced-motion so reduced-motion users
+   get instant state changes with full functionality. */
+@media (prefers-reduced-motion: no-preference) {
+  .kinetix-press {
+    animation: kinetix-press 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes kinetix-press {
+    0% { transform: scale(1); }
+    35% { transform: scale(0.93); }
+    100% { transform: scale(1); }
+  }
+
+  .kinetix-like-icon-active {
+    animation: kinetix-like-icon 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes kinetix-like-icon {
+    0% { transform: scale(0.6) rotate(-8deg); }
+    55% { transform: scale(1.22) rotate(4deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+
+  .kinetix-like-icon-inactive {
+    animation: kinetix-like-icon-off 180ms ease-out;
+  }
+  @keyframes kinetix-like-icon-off {
+    0% { transform: scale(1.14); }
+    100% { transform: scale(1); }
+  }
+
+  .kinetix-burst-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    margin: -2px 0 0 -2px;
+    border-radius: 9999px;
+    background: currentColor;
+    opacity: 0;
+    animation: kinetix-burst 460ms cubic-bezier(0.16, 0.84, 0.44, 1) forwards;
+  }
+  @keyframes kinetix-burst {
+    0% { opacity: 0.9; transform: translate(0, 0) scale(1); }
+    70% { opacity: 0.45; }
+    100% { opacity: 0; transform: translate(var(--burst-x), var(--burst-y)) scale(0.4); }
+  }
+
+  .kinetix-subscribe-pop {
+    animation: kinetix-subscribe-pop 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes kinetix-subscribe-pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.045); }
+    100% { transform: scale(1); }
+  }
+
+  .kinetix-pop {
+    animation: kinetix-subscribe-pop 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .kinetix-pending {
+    animation: kinetix-pending 900ms ease-in-out infinite;
+  }
+  @keyframes kinetix-pending {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.62; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kinetix-press,
+  .kinetix-like-icon-active,
+  .kinetix-like-icon-inactive,
+  .kinetix-subscribe-pop,
+  .kinetix-burst-dot {
+    animation: none !important;
+  }
+  .kinetix-pending {
+    animation: none !important;
+    opacity: 0.75;
+  }
+
+  .kinetix-subscribe-confirm {
+    animation: kinetix-subscribe-confirm 300ms ease-out;
+  }
+  @keyframes kinetix-subscribe-confirm {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+}

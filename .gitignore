@@ -1,0 +1,25 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+
+# Private environment files (keep the placeholder example tracked)
+.env
+.env.*
+!.env.example
+
+# Runtime persistence — contains live records and password hashes
+data/
+*.db.json
+*.db.backup.json
+db.tmp.*
+
+# User-uploaded media and temporary upload chunks
+uploads/
+
+# Local debug/scratch artifacts (API dumps, ad-hoc scripts)
+check.json
+apitest_out.txt
+

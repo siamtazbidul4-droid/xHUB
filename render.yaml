@@ -1,0 +1,55 @@
+# Render Blueprint for the Kinetix Video Platform.
+#
+# Service type: Web Service (Node). The application is a single Express server
+# that serves the built React SPA (from ./dist) plus the /api routes, so it maps
+# to one web service rather than a separate static site.
+#
+# Storage: the app persists authoritative data in a JSON file (data/db.json) and
+# stores uploaded media under ./uploads. Both live on the local filesystem, so a
+# persistent disk is REQUIRED for data to survive deploys and restarts. The disk
+# is mounted at the app's working directory so both folders are covered.
+#
+# IMPORTANT: a persistent disk ties this service to a single instance. The JSON
+# store and the in-process rate limiter are NOT multi-instance safe; do not scale
+# this service horizontally while it uses local-file persistence.
+#
+# Secrets are NOT defined here. Set JWT_SECRET, ADMIN_EMAIL and ADMIN_PASSWORD in
+# the Render dashboard (Environment -> Secret Files / Environment Variables) or
+# via `sync: false` variables below, which Render prompts for on first deploy.
+
+services:
+  - type: web
+    name: kinetix-video-platform
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: false
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22.23.2
+      # JWT signing secret. MUST be a strong random value (>= 32 chars).
+      # The server refuses to start in production if this is unset or left at
+      # the known default. Generate with:
+      #   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+      - key: JWT_SECRET
+        sync: false
+      # Platform administrator credentials used only by /api/admin/login.
+      # If unset, no administrator is provisioned and admin login returns 503.
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      # Number of trusted proxy hops in front of the app. Render terminates TLS
+      # at its edge proxy, so the app sees one proxy hop. Set to 1 so rate
+      # limiting keys on the real client IP. Do NOT set to an unbounded value.
+      - key: TRUST_PROXY
+        value: "1"
+    disk:
+      name: kinetix-data
+      mountPath: /opt/render/project/src
+      sizeGB: 1
